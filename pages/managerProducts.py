@@ -2,6 +2,8 @@ import customtkinter as ctk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import json
+import shutil
+import os
 
 class ManagerProducts(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -13,7 +15,6 @@ class ManagerProducts(ctk.CTkFrame):
             heading_frame, 
             text="Tạo đơn hàng", 
             font=ctk.CTkFont(size=20, weight="bold")
-            
         )
         label.pack(pady=10)
 
@@ -72,7 +73,7 @@ class ManagerProducts(ctk.CTkFrame):
         self.footer_label = ctk.CTkLabel(footer_content_frame, text="Tổng số sản phẩm: 0", font=ctk.CTkFont(size=14))
         self.footer_label.pack(side="left", padx=10)
 
-        update_button = ctk.CTkButton(footer_content_frame, text="Cập nhật", command=self.update_footer, width=100)
+        update_button = ctk.CTkButton(footer_content_frame, text="Cập nhật", command=self.save_products, width=100)
         update_button.pack(side="right", padx=10)
 
         # Khởi tạo danh sách sản phẩm
@@ -82,20 +83,42 @@ class ManagerProducts(ctk.CTkFrame):
         self.load_products()
 
     def load_products(self):
+        """Đọc sản phẩm từ tệp products.json và hiển thị chúng vào giao diện."""
         for product in self.product_list:
             product["frame"].destroy()
         self.product_list.clear()
-        """Đọc sản phẩm từ tệp products.json và hiển thị chúng vào giao diện."""
+
         try:
-            # Sử dụng đường dẫn đúng tới tệp sản phẩm
             with open("../Project_QLHD/assets/data/products.json", "r", encoding="utf-8") as file:
                 products = json.load(file)
-                
+
             for product in products:
                 self.display_product(product)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"Lỗi khi đọc file sản phẩm: {e}")
 
+    def save_products(self):
+        """Lưu danh sách sản phẩm vào tệp products.json."""
+        try:
+            # Đảm bảo thư mục chứa tệp đã tồn tại
+            if not os.path.exists("../Project_QLHD/assets/data"):
+                os.makedirs("../Project_QLHD/assets/data")
+            if not os.path.exists("../Project_QLHD/assets/imgs"):
+                os.makedirs("../Project_QLHD/assets/imgs")
+
+            # Chuyển đổi danh sách sản phẩm thành định dạng phù hợp với JSON
+            products_to_save = [{
+                "id": product["id"],
+                "name": product["name"],
+                "price": int(product["price"]),
+                "img": product["image"]  # Đường dẫn ảnh mới sẽ là tên ảnh
+            } for product in self.product_list]
+
+            with open("../Project_QLHD/assets/data/products.json", "w", encoding="utf-8") as file:
+                json.dump(products_to_save, file, ensure_ascii=False, indent=4)
+            print("Dữ liệu đã được lưu thành công.")
+        except Exception as e:
+            print(f"Lỗi khi lưu sản phẩm vào tệp: {e}")
 
     def display_product(self, product):
         """Hiển thị sản phẩm vào giao diện."""
@@ -124,6 +147,7 @@ class ManagerProducts(ctk.CTkFrame):
 
         # Thêm sản phẩm vào danh sách
         self.product_list.append({
+            "id" : len(self.product_list) + 1,
             "name": product["name"],
             "price": product["price"],
             "image": product["img"],
@@ -151,12 +175,24 @@ class ManagerProducts(ctk.CTkFrame):
         product_price = self.product_price_entry.get()
 
         if product_name and product_price and self.selected_image:
+            # Tạo ID duy nhất cho ảnh
+            image_id = str(len(self.product_list))  # Tạo ID duy nhất cho ảnh
+            image_extension = self.selected_image.split('.')[-1]  # Lấy phần mở rộng của ảnh
+            new_image_path = f"../Project_QLHD/assets/imgs/{image_id}.png"  # Đặt tên mới cho ảnh
+
+            # Sao chép ảnh vào thư mục imgs
+            try:
+                shutil.copy(self.selected_image, new_image_path)
+            except Exception as e:
+                print(f"Lỗi khi sao chép ảnh: {e}")
+                return
+
             # Tạo khung cho sản phẩm
             product_frame = ctk.CTkFrame(self.scrollable_frame)
             product_frame.pack(fill="x", pady=5)
 
             # Hiển thị ảnh sản phẩm
-            image = Image.open(self.selected_image)
+            image = Image.open(new_image_path)
             image = image.resize((100, 100))  # Resize ảnh cho vừa
             photo = ImageTk.PhotoImage(image)
             img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
@@ -179,7 +215,7 @@ class ManagerProducts(ctk.CTkFrame):
             self.product_list.append({
                 "name": product_name,
                 "price": product_price,
-                "image": self.selected_image,
+                "image": new_image_path,  # Lưu đường dẫn ảnh mới
                 "frame": product_frame  # Lưu lại frame của sản phẩm
             })
 
@@ -211,6 +247,6 @@ class ManagerProducts(ctk.CTkFrame):
         self.update_footer()
 
     def update_footer(self):
-        """Cập nhật tổng số sản phẩm."""
+        """Cập nhật tổng số sản phẩm trong footer."""
         total_items = len(self.product_list)
         self.footer_label.configure(text=f"Tổng số sản phẩm: {total_items}")
