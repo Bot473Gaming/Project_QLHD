@@ -4,6 +4,6 @@ class CreateOrder(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent)
         self.controller = controller
 
-        label = ctk.CTkLabel(self, text="Đây là Trang tao hoa don hang", font=ctk.CTkFont(size=20, weight="bold"))
+        label = ctk.CTkLabel(self, text="Đây là Trang tao hoa don hang 234567", font=ctk.CTkFont(size=20, weight="bold"))
         label.pack(pady=20)
         
