@@ -47,6 +47,12 @@ class App(ctk.CTk):
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+    
+    # Nếu là trang báo cáo doanh thu, tự động cập nhật khi chuyển đến trang này
+        if isinstance(frame, ReportDT):
+            frame.update_data()
+        elif (isinstance(frame, CreateOrder)):
+            frame.update_search_results()
 
 
 if __name__ == "__main__":
