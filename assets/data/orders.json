@@ -1,0 +1,41 @@
+[
+    {
+        "id": 1,
+        "date": "11-9-2009",
+        "products": [
+            {
+                "id": 5,
+                "quantity": 2
+            }
+        ],
+        "total_quantity": 2,
+        "total_cost": 100000
+
+    },
+    {
+        "id": 2,
+        "date": "11-9-2009",
+        "products": [
+            {
+                "id": 5,
+                "quantity": 2
+            }
+        ],
+        "total_quantity": 2,
+        "total_cost": 100000
+
+    },
+    {
+        "id": 3,
+        "date": "11-9-2009",
+        "products": [
+            {
+                "id": 5,
+                "quantity": 2
+            }
+        ],
+        "total_quantity": 2,
+        "total_cost": 100000
+
+    }
+]
