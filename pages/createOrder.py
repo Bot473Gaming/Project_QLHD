@@ -181,7 +181,7 @@ class CreateOrder(ctk.CTkFrame):
         # Tạo một hàng mới trong danh sách giỏ hàng
         row_frame = ctk.CTkFrame(self.items_frame)
         row_frame.pack(fill="x", pady=5)
-
+        self.cart[product["id"]]["frame"] = row_frame
         # Cột 1: Ảnh sản phẩm
         img = Image.open(product["img"])  # Đọc ảnh từ đường dẫn (product["img"])
         img = img.resize((100, 100))  # Đảm bảo ảnh có kích thước 60x60
@@ -346,3 +346,10 @@ class CreateOrder(ctk.CTkFrame):
         # Hiển thị thông báo thành công
         messagebox.showinfo("Thông báo", "Thanh toán thành công!")
         print("Đơn hàng mới:", new_order)
+    def check_exits_products(self):
+        # Kiểm tra tồn tại sản phẩm trong giỏ hàng
+        for id in self.cart.keys():
+            if (id not in map(lambda x: x["id"],self.product_data)):
+                self.cart[id]["frame"].destroy()
+            
+        

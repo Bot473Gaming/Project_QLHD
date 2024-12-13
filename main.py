@@ -57,6 +57,7 @@ class App(ctk.CTk):
             frame.update_data()
         elif isinstance(frame, CreateOrder):
             frame.update_search_results()
+            frame.check_exits_products()
         elif isinstance(frame, ManagerProducts):
             frame.load_products()
 
