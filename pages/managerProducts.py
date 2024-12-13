@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 import json
 import shutil
+import uuid
 import os
 
 class ManagerProducts(ctk.CTkFrame):
@@ -153,9 +154,9 @@ class ManagerProducts(ctk.CTkFrame):
 
         # Thêm sản phẩm vào danh sách
         self.product_list.append({
-            "id" : len(self.product_list) + 1 ,
+            "id" : uuid.uuid4() ,
             "name": product["name"],
-            "price": product["price"],
+            "price": int(product["price"]),
             "image": product["img"],
             "frame": product_frame  # Lưu lại frame của sản phẩm
         })
@@ -178,7 +179,7 @@ class ManagerProducts(ctk.CTkFrame):
     def add_item(self):
         """Thêm sản phẩm vào danh sách."""
         product_name = self.product_name_entry.get()
-        product_price = self.product_price_entry.get()
+        product_price = int(self.product_price_entry.get())
 
         if product_name and product_price and self.selected_image:
             # Tạo ID duy nhất cho ảnh
@@ -219,9 +220,9 @@ class ManagerProducts(ctk.CTkFrame):
 
             # Thêm sản phẩm vào danh sách
             self.product_list.append({
-                "id" : len(self.product_list) + 1 ,
+                "id" : uuid.uuid4() ,
                 "name": product_name,
-                "price": product_price,
+                "price": int(product_price),
                 "image": new_image_path,  # Lưu đường dẫn ảnh mới
                 "frame": product_frame  # Lưu lại frame của sản phẩm
             })

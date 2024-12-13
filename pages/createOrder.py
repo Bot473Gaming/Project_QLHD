@@ -3,6 +3,8 @@ from PIL import Image, ImageTk
 from tkinter import messagebox
 import datetime
 import json
+import uuid
+
 
 class CreateOrder(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -312,7 +314,7 @@ class CreateOrder(ctk.CTkFrame):
 
         # Tạo đơn hàng mới
         new_order = {
-            "id": len(orders) + 1,
+            "id": uuid.uuid4(),
             "date": current_date,
             "products": [
                 {
