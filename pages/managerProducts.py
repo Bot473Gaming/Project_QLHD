@@ -1,11 +1,17 @@
 import customtkinter as ctk
 from tkinter import filedialog
 from PIL import Image, ImageTk
+import json
+import os
 
 class ManagerProducts(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
+
+        # Khởi tạo danh sách sản phẩm từ tệp JSON
+        self.product_list = self.load_products()
+        self.current_id = len(self.product_list) + 1  # Để tạo id tự động cho sản phẩm mới
 
         # Phần heading
         heading_frame = ctk.CTkFrame(self)
@@ -59,6 +65,10 @@ class ManagerProducts(ctk.CTkFrame):
         button1 = ctk.CTkButton(right_frame, text="Thêm sản phẩm", command=self.add_item)
         button1.pack(pady=10)
 
+        # Nút Cập nhật
+        update_button = ctk.CTkButton(right_frame, text="Cập nhật", command=self.update_products)
+        update_button.pack(pady=10)
+
         # Footer
         footer_frame = ctk.CTkFrame(self)
         footer_frame.pack(fill="x")
@@ -73,11 +83,61 @@ class ManagerProducts(ctk.CTkFrame):
         self.footer_label = ctk.CTkLabel(footer_content_frame, text="Tổng số sản phẩm: 0", font=ctk.CTkFont(size=14))
         self.footer_label.pack(side="left", padx=10)
 
-        update_button = ctk.CTkButton(footer_content_frame, text="Cập nhật", command=self.update_footer, width=100)
-        update_button.pack(side="right", padx=10)
+        # Khởi tạo footer
+        self.update_footer()
 
-        # Khởi tạo danh sách sản phẩm
-        self.product_list = []
+        # Hiển thị các sản phẩm đã lưu trong JSON
+        self.display_products()
+
+    def load_products(self):
+        """Đọc danh sách sản phẩm từ tệp assets/products.json."""
+        file_path = "assets/products.json"
+        if not os.path.exists(file_path):
+            return []  # Nếu tệp không tồn tại, trả về danh sách rỗng
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                return data
+        except json.JSONDecodeError:
+            print("Lỗi đọc tệp JSON. Tệp có thể bị hỏng.")
+            return []  # Nếu có lỗi khi đọc tệp JSON, trả về danh sách rỗng
+
+    def save_products(self):
+        """Lưu danh sách sản phẩm vào tệp assets/products.json."""
+        file_path = "assets/products.json"
+        # Kiểm tra và tạo thư mục nếu chưa có
+        if not os.path.exists("assets"):
+            os.makedirs("assets")
+        
+        with open(file_path, "w", encoding="utf-8") as file:
+            json.dump(self.product_list, file, ensure_ascii=False, indent=4)
+
+    def display_products(self):
+        """Hiển thị tất cả sản phẩm từ danh sách vào giao diện."""
+        for product in self.product_list:
+            product_frame = ctk.CTkFrame(self.scrollable_frame)
+            product_frame.pack(fill="x", pady=5)
+
+            # Hiển thị ảnh sản phẩm
+            image = Image.open(product["img"])
+            image = image.resize((100, 100))  # Resize ảnh cho vừa
+            photo = ImageTk.PhotoImage(image)
+            img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
+            img_label.image = photo  # Giữ tham chiếu ảnh
+            img_label.pack(side="left", padx=10)
+
+            # Hiển thị tên sản phẩm
+            name_label = ctk.CTkLabel(product_frame, text=product["name"], font=ctk.CTkFont(size=18), anchor="w")
+            name_label.pack(anchor="w")
+
+            # Hiển thị giá sản phẩm
+            price_label = ctk.CTkLabel(product_frame, text=f"{product['price']} VND", anchor="w")
+            price_label.pack(anchor="w")
+
+            # Tạo nút xóa cho sản phẩm
+            delete_button = ctk.CTkButton(product_frame, text="Xóa", command=lambda product_frame=product_frame: self.remove_specific_item(product_frame))
+            delete_button.pack(side="right", padx=10)
 
     def select_image(self):
         # Mở hộp thoại để chọn ảnh
@@ -110,7 +170,7 @@ class ManagerProducts(ctk.CTkFrame):
             img_label.pack(side="left", padx=10)
 
             # Hiển thị tên sản phẩm
-            name_label = ctk.CTkLabel(product_frame, text=product_name,font=ctk.CTkFont(size=18), anchor="w")
+            name_label = ctk.CTkLabel(product_frame, text=product_name, font=ctk.CTkFont(size=18), anchor="w")
             name_label.pack(anchor="w")
 
             # Hiển thị giá sản phẩm
@@ -121,16 +181,23 @@ class ManagerProducts(ctk.CTkFrame):
             delete_button = ctk.CTkButton(product_frame, text="Xóa", command=lambda: self.remove_specific_item(product_frame))
             delete_button.pack(side="right", padx=10)
 
+            # Tạo id cho sản phẩm mới
+            product_id = self.current_id
+            self.current_id += 1
+
             # Thêm sản phẩm vào danh sách
             self.product_list.append({
+                "id": product_id,
+                "img": self.selected_image,
                 "name": product_name,
-                "price": product_price,
-                "image": self.selected_image,
-                "frame": product_frame  # Lưu lại frame của sản phẩm
+                "price": product_price
             })
 
             # Cập nhật footer
             self.update_footer()
+
+            # Lưu danh sách sản phẩm vào tệp JSON
+            self.save_products()
 
             # Reset các trường nhập
             self.product_name_entry.delete(0, "end")
@@ -156,10 +223,18 @@ class ManagerProducts(ctk.CTkFrame):
         # Cập nhật footer
         self.update_footer()
 
+        # Lưu lại danh sách sản phẩm vào tệp JSON
+        self.save_products()
+
     def update_footer(self):
         # Cập nhật tổng số sản phẩm
         total_items = len(self.product_list)
         self.footer_label.configure(text=f"Tổng số sản phẩm: {total_items}")
+
+    def update_products(self):
+        """Lưu lại tất cả các sản phẩm vào tệp JSON khi nhấn nút Cập nhật."""
+        self.save_products()
+        print("Dữ liệu đã được cập nhật và lưu vào tệp assets/products.json")
 
 if __name__ == "__main__":
     app = ctk.CTk()
