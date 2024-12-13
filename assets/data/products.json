@@ -22,11 +22,5 @@
         "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
         "name": "Hủ tiếu",
         "price": 450000
-    },
-    {
-        "id": 5,
-        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
-        "name": "Bánh mì",
-        "price": 250000
     }
 ]
