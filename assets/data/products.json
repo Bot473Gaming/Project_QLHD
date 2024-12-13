@@ -1,7 +1,32 @@
 [
     {
         "id": 1,
-        "name": "phor",
+        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
+        "name": "phở",
         "price": 500000
+    },
+    {
+        "id": 2,
+        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
+        "name": "Bún bò",
+        "price": 300000
+    },
+    {
+        "id": 3,
+        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
+        "name": "Bún chả",
+        "price": 350000
+    },
+    {
+        "id": 4,
+        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
+        "name": "Hủ tiếu",
+        "price": 450000
+    },
+    {
+        "id": 5,
+        "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
+        "name": "Bánh mì",
+        "price": 250000
     }
 ]

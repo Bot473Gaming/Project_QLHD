@@ -1,41 +1,194 @@
 [
     {
         "id": 1,
-        "date": "11-9-2009",
+        "date": "13-1-2024",
         "products": [
             {
-                "id": 5,
-                "quantity": 2
+                "id": 2,
+                "quantity": 4
             }
         ],
-        "total_quantity": 2,
-        "total_cost": 100000
-
+        "total_quantity": 4,
+        "total_cost": 1200000
     },
     {
         "id": 2,
-        "date": "11-9-2009",
+        "date": "13-2-2024",
         "products": [
             {
-                "id": 5,
-                "quantity": 2
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 2,
+                "quantity": 1
+            },
+            {
+                "id": 3,
+                "quantity": 1
+            },
+            {
+                "id": 4,
+                "quantity": 1
             }
         ],
-        "total_quantity": 2,
-        "total_cost": 100000
-
+        "total_quantity": 4,
+        "total_cost": 1600000
     },
     {
         "id": 3,
-        "date": "11-9-2009",
+        "date": "13-3-2024",
         "products": [
+            {
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 2,
+                "quantity": 7
+            }
+        ],
+        "total_quantity": 8,
+        "total_cost": 2600000
+    },
+    {
+        "id": 4,
+        "date": "13-4-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 2,
+                "quantity": 1
+            },
+            {
+                "id": 3,
+                "quantity": 1
+            },
+            {
+                "id": 4,
+                "quantity": 1
+            }
+        ],
+        "total_quantity": 4,
+        "total_cost": 1600000
+    },
+    {
+        "id": 5,
+        "date": "13-5-2024",
+        "products": [
+            {
+                "id": 2,
+                "quantity": 1
+            },
+            {
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 3,
+                "quantity": 3
+            },
+            {
+                "id": 4,
+                "quantity": 2
+            },
             {
                 "id": 5,
                 "quantity": 2
+            },
+            {
+                "id": 6,
+                "quantity": 1
             }
         ],
-        "total_quantity": 2,
-        "total_cost": 100000
-
+        "total_quantity": 10,
+        "total_cost": 3650000
+    },
+    {
+        "id": 6,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 3
+            }
+        ],
+        "total_quantity": 3,
+        "total_cost": 1500000
+    },
+    {
+        "id": 7,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 1
+            }
+        ],
+        "total_quantity": 1,
+        "total_cost": 500000
+    },
+    {
+        "id": 8,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 3,
+                "quantity": 2
+            }
+        ],
+        "total_quantity": 3,
+        "total_cost": 1200000
+    },
+    {
+        "id": 9,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 1
+            },
+            {
+                "id": 2,
+                "quantity": 1
+            },
+            {
+                "id": 3,
+                "quantity": 1
+            }
+        ],
+        "total_quantity": 3,
+        "total_cost": 1150000
+    },
+    {
+        "id": 10,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 26
+            }
+        ],
+        "total_quantity": 26,
+        "total_cost": 13000000
+    },
+    {
+        "id": 11,
+        "date": "13-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 5
+            }
+        ],
+        "total_quantity": 5,
+        "total_cost": 2500000
     }
 ]
