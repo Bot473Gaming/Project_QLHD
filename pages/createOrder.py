@@ -116,7 +116,7 @@ class CreateOrder(ctk.CTkFrame):
         # Xóa kết quả tìm kiếm cũ
         for widget in self.suggestion_frame.winfo_children():
             widget.destroy()
-
+        self.product_data = self.load_product_data("../Project_QLHD/assets/data/products.json")
         search_query = self.search_entry.get().lower()
 
         # Tìm kiếm các sản phẩm phù hợp
