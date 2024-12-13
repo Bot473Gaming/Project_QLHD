@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import filedialog
-from PIL import Image
+from PIL import Image, ImageTk
 
 class ManagerProducts(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -32,20 +32,19 @@ class ManagerProducts(ctk.CTkFrame):
         content_frame.columnconfigure(2, weight=1)  # Phần menu bên phải chiếm ít không gian
         content_frame.rowconfigure(0, weight=1)     # Đảm bảo chiếm hết chiều cao
 
-        # Phần bên trái - danh sách sản phẩm (sử dụng CTkScrollableFrame)
-        self.product_frame = ctk.CTkScrollableFrame(content_frame)
-        self.product_frame.grid(row=0, column=0, sticky="nsew")
+        # Phần bên trái - danh sách sản phẩm
+        self.scrollable_frame = ctk.CTkScrollableFrame(content_frame)
+        self.scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         # Phần bên phải - menu
         right_frame = ctk.CTkFrame(content_frame)
-        right_frame.grid(row=0, column=2, sticky="nsew")
-
-        # Menu bên phải
-        button1 = ctk.CTkButton(right_frame, text="Thêm sản phẩm", command=self.add_item)
-        button1.pack(pady=10)
+        right_frame.grid(row=0, column=2, sticky="nsew", padx=10, pady=10)
 
         # Nút chọn ảnh
         self.selected_image = None
+        self.preview_label = ctk.CTkLabel(right_frame, text="", width=150, height=150, fg_color="lightgray")
+        self.preview_label.pack(pady=10)
+
         self.select_image_button = ctk.CTkButton(right_frame, text="Chọn ảnh", command=self.select_image)
         self.select_image_button.pack(pady=10)
 
@@ -55,6 +54,10 @@ class ManagerProducts(ctk.CTkFrame):
 
         self.product_price_entry = ctk.CTkEntry(right_frame, placeholder_text="Giá sản phẩm")
         self.product_price_entry.pack(pady=5)
+        
+        # Menu bên phải
+        button1 = ctk.CTkButton(right_frame, text="Thêm sản phẩm", command=self.add_item)
+        button1.pack(pady=10)
 
         # Footer
         footer_frame = ctk.CTkFrame(self)
@@ -81,35 +84,38 @@ class ManagerProducts(ctk.CTkFrame):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif")])
         if file_path:
             self.selected_image = file_path
+            # Hiển thị ảnh preview
+            image = Image.open(self.selected_image)
+            image = image.resize((200, 200))
+            photo = ImageTk.PhotoImage(image)
+            self.preview_label.configure(image=photo, text="")
+            self.preview_label.image = photo  # Giữ tham chiếu ảnh
 
     def add_item(self):
-    # Lấy tên sản phẩm và giá từ entry
+        # Lấy tên sản phẩm và giá từ entry
         product_name = self.product_name_entry.get()
         product_price = self.product_price_entry.get()
 
         if product_name and product_price and self.selected_image:
             # Tạo khung cho sản phẩm
-            product_frame = ctk.CTkFrame(self.product_frame)
+            product_frame = ctk.CTkFrame(self.scrollable_frame)
             product_frame.pack(fill="x", pady=5)
 
-            # Hiển thị ảnh sản phẩm bằng CTkImage
+            # Hiển thị ảnh sản phẩm
             image = Image.open(self.selected_image)
-            photo = ctk.CTkImage(image, size=(100, 100))  # Đặt kích thước mong muốn
+            image = image.resize((100, 100))  # Resize ảnh cho vừa
+            photo = ImageTk.PhotoImage(image)
             img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
-            img_label.image = photo  # Giữ tham chiếu ảnh để không bị xóa
+            img_label.image = photo  # Giữ tham chiếu ảnh
             img_label.pack(side="left", padx=10)
 
-            # Tạo một khung con cho thông tin sản phẩm (tên và giá)
-            info_frame = ctk.CTkFrame(product_frame, fg_color="transparent")
-            info_frame.pack(side="left", padx=10, pady=5)
+            # Hiển thị tên sản phẩm
+            name_label = ctk.CTkLabel(product_frame, text=product_name,font=ctk.CTkFont(size=18), anchor="w")
+            name_label.pack(anchor="w")
 
-            # Hiển thị tên sản phẩm (ở trên)
-            name_label = ctk.CTkLabel(info_frame, text=product_name, font=ctk.CTkFont(size=18, weight="bold"))
-            name_label.pack(side="top", anchor="w")
-
-            # Hiển thị giá sản phẩm (ở dưới tên)
-            price_label = ctk.CTkLabel(info_frame, text=f"{product_price} VND", font=ctk.CTkFont(size=14))
-            price_label.pack(side="top", anchor="w")
+            # Hiển thị giá sản phẩm
+            price_label = ctk.CTkLabel(product_frame, text=f"{product_price} VND", anchor="w")
+            price_label.pack(anchor="w")
 
             # Tạo nút xóa cho sản phẩm
             delete_button = ctk.CTkButton(product_frame, text="Xóa", command=lambda: self.remove_specific_item(product_frame))
@@ -130,9 +136,12 @@ class ManagerProducts(ctk.CTkFrame):
             self.product_name_entry.delete(0, "end")
             self.product_price_entry.delete(0, "end")
             self.selected_image = None
+
+            # Xóa ảnh preview
+            self.preview_label.configure(image=None, text="", fg_color="lightgray")
+            self.preview_label.image = None
         else:
             print("Vui lòng nhập đầy đủ thông tin sản phẩm và chọn ảnh.")
-
 
     def remove_specific_item(self, product_frame):
         # Xóa sản phẩm khỏi danh sách
@@ -140,7 +149,7 @@ class ManagerProducts(ctk.CTkFrame):
             if product["frame"] == product_frame:
                 self.product_list.remove(product)
                 break
-        
+
         # Xóa frame của sản phẩm từ giao diện
         product_frame.destroy()
 
