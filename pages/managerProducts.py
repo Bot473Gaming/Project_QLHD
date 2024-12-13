@@ -92,13 +92,12 @@ class ManagerProducts(ctk.CTkFrame):
             product_frame = ctk.CTkFrame(self.product_frame)
             product_frame.pack(fill="x", pady=5)
 
-            # Hiển thị ảnh sản phẩm
+            # Hiển thị ảnh sản phẩm bằng CTkImage
             image = Image.open(self.selected_image)
-            image = image.resize((100, 100))  # Resize ảnh cho vừa
-            photo = ImageTk.PhotoImage(image)
-            image_label = ctk.CTkLabel(product_frame, image=photo)
-            image_label.image = photo  # Giữ tham chiếu ảnh
-            image_label.pack(side="left", padx=10)
+            photo = ctk.CTkImage(image, size=(100, 100))  # Đặt kích thước mong muốn
+            img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
+            img_label.image = photo  # Giữ tham chiếu ảnh để không bị xóa
+            img_label.pack(side="left", padx=10)
 
             # Hiển thị tên sản phẩm
             name_label = ctk.CTkLabel(product_frame, text=product_name)
