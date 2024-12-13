@@ -59,19 +59,20 @@ class CreateOrder(ctk.CTkFrame):
 
         # Footer
         footer_frame = ctk.CTkFrame(self)
-        footer_frame.pack(fill="x")
+        footer_frame.pack(fill="x", pady=10)
 
-        # Dòng kẻ trên Footer
-        separator_footer = ctk.CTkFrame(footer_frame, height=2, fg_color="gray")
-        separator_footer.pack(fill="x", side="top")
-
-        footer_content_frame = ctk.CTkFrame(footer_frame, height=40)
+        footer_content_frame = ctk.CTkFrame(footer_frame, height=80)  # Tăng chiều cao footer
         footer_content_frame.pack(fill="x")
 
-        self.footer_label = ctk.CTkLabel(footer_content_frame, text="Tổng tiền: 0, Tổng số sản phẩm: 0", font=ctk.CTkFont(size=14))
-        self.footer_label.pack(side="left", padx=10)
+        # Hiển thị số lượng và tổng tiền
+        self.quantity_label = ctk.CTkLabel(footer_content_frame, text="Số lượng: 0", font=ctk.CTkFont(size=16))
+        self.quantity_label.pack(side="left", padx=20)
 
-        pay_button = ctk.CTkButton(footer_content_frame, text="Thanh toán", command=self.payment, width=100)
+        self.total_label = ctk.CTkLabel(footer_content_frame, text="Tổng tiền: 0 VND", font=ctk.CTkFont(size=16))
+        self.total_label.pack(side="left", padx=20)
+
+        # Nút thanh toán
+        pay_button = ctk.CTkButton(footer_content_frame, text="Thanh toán", command=self.payment, width=120)
         pay_button.pack(side="right", padx=10)
 
     def add_item(self):
@@ -95,14 +96,26 @@ class CreateOrder(ctk.CTkFrame):
         price_label.grid(row=1, column=0, sticky="w")
 
         # Nút giảm, số lượng và nút tăng
-        self.quantity = 1  # Số lượng mặc định
-        minus_button = ctk.CTkButton(detail_frame, text="-", width=30, command=lambda: self.update_quantity(-1, price_label))
-        minus_button.grid(row=1, column=1)
-
-        quantity_label = ctk.CTkLabel(detail_frame, text=f"{self.quantity}", font=ctk.CTkFont(size=12), width=30)
+        quantity = 1  # Mỗi sản phẩm có số lượng riêng biệt
+        quantity_label = ctk.CTkLabel(detail_frame, text=f"{quantity}", font=ctk.CTkFont(size=12), width=30)
         quantity_label.grid(row=1, column=2, padx=10)
 
-        plus_button = ctk.CTkButton(detail_frame, text="+", width=30, command=lambda: self.update_quantity(1, price_label))
+        def update_quantity(change):
+            # Cập nhật số lượng và tổng tiền khi nhấn nút "+" hoặc "-"
+            nonlocal quantity
+            quantity += change
+            if quantity < 1:
+                quantity = 1  # Đảm bảo số lượng không nhỏ hơn 1
+            quantity_label.configure(text=f"{quantity}")
+            
+            total_price = quantity * 100  # Tính tổng tiền (giả sử giá đơn vị là 100)
+            total_label.configure(text=f" = {total_price}")
+            self.update_footer()
+
+        minus_button = ctk.CTkButton(detail_frame, text="-", width=30, command=lambda: update_quantity(-1))
+        minus_button.grid(row=1, column=1)
+
+        plus_button = ctk.CTkButton(detail_frame, text="+", width=30, command=lambda: update_quantity(1))
         plus_button.grid(row=1, column=3)
 
         total_label = ctk.CTkLabel(detail_frame, text=" = 100", font=ctk.CTkFont(size=12))
@@ -116,21 +129,6 @@ class CreateOrder(ctk.CTkFrame):
         row_frame.grid_columnconfigure(0, weight=1)  # Cột 1 chiếm không gian vừa phải
         row_frame.grid_columnconfigure(1, weight=3)  # Cột 2 chiếm nhiều không gian
         row_frame.grid_columnconfigure(2, weight=0)  # Cột 3 chiếm ít không gian (nút xóa)
-
-        self.update_footer()
-
-    def update_quantity(self, change, price_label):
-        # Cập nhật số lượng khi nhấn nút "+" hoặc "-"
-        self.quantity += change
-        if self.quantity < 1:
-            self.quantity = 1  # Đảm bảo số lượng không nhỏ hơn 1
-        # Cập nhật số lượng và tính lại tổng tiền
-        quantity_label = price_label.master.winfo_children()[2]  # Lấy label hiển thị số lượng
-        quantity_label.configure(text=f"{self.quantity}")
-        
-        total_label = price_label.master.winfo_children()[4]
-        total_price = self.quantity * 100  # Assuming unit price is 100
-        total_label.configure(text=f" = {total_price}")
 
         self.update_footer()
 
@@ -151,14 +149,15 @@ class CreateOrder(ctk.CTkFrame):
         total_money = 0
         for item in self.items_frame.winfo_children():
             # Lấy thông tin tổng tiền từ label
-            price_label = item.winfo_children()[1].winfo_children()[4]  # label tổng tiền
+            price_label = item.winfo_children()[1].winfo_children()[5]  # label tổng tiền
+            
             price_text = price_label.cget("text")
             total_money += int(price_text.split(" = ")[1])
 
-        self.footer_label.configure(text=f"Tổng tiền: {total_money}, Tổng số sản phẩm: {total_items}")
+        self.quantity_label.configure(text=f"Số lượng: {total_items}")
+        self.total_label.configure(text=f"Tổng tiền: {total_money} VND")
 
     def payment(self):
         # Xử lý thanh toán
-        print("Thanh toán thành công")
+        print("Thanh toán thành")
         self.clear_list()
-
