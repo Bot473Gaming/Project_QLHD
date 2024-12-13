@@ -145,7 +145,7 @@ class ManagerProducts(ctk.CTkFrame):
         name_label.pack(anchor="w")
 
         # Hiển thị giá sản phẩm
-        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']} VND", anchor="w")
+        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']:,} VND", anchor="w")
         price_label.pack(anchor="w")
 
         # Tạo nút xóa cho sản phẩm
