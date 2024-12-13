@@ -145,17 +145,24 @@ class CreateOrder(ctk.CTkFrame):
 
     def update_footer(self):
         # Cập nhật tổng số sản phẩm và tổng tiền
-        total_items = len(self.items_frame.winfo_children())
-        total_money = 0
-        for item in self.items_frame.winfo_children():
-            # Lấy thông tin tổng tiền từ label
-            price_label = item.winfo_children()[1].winfo_children()[5]  # label tổng tiền
-            
-            price_text = price_label.cget("text")
-            total_money += int(price_text.split(" = ")[1])
+        total_items = 0  # Tổng số lượng sản phẩm
+        total_money = 0  # Tổng tiền
 
+        for item in self.items_frame.winfo_children():
+            # Tìm label số lượng của mỗi sản phẩm (nó nằm trong phần chi tiết sản phẩm)
+            quantity_label = item.winfo_children()[1].winfo_children()[2]  # label số lượng
+            quantity = int(quantity_label.cget("text"))  # Lấy số lượng
+            total_items += quantity  # Cộng số lượng vào tổng số lượng
+
+            # Tính tổng tiền của sản phẩm
+            price_label = item.winfo_children()[1].winfo_children()[5]  # label tổng tiền
+            price_text = price_label.cget("text")
+            total_money += int(price_text.split(" = ")[1])  # Cộng tổng tiền vào tổng tiền
+
+        # Cập nhật thông tin số lượng và tổng tiền trong footer
         self.quantity_label.configure(text=f"Số lượng: {total_items}")
         self.total_label.configure(text=f"Tổng tiền: {total_money} VND")
+
 
     def payment(self):
         # Xử lý thanh toán
