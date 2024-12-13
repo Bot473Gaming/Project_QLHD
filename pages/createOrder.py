@@ -314,7 +314,7 @@ class CreateOrder(ctk.CTkFrame):
 
         # Tạo đơn hàng mới
         new_order = {
-            "id": uuid.uuid4(),
+            "id": str(uuid.uuid4()),
             "date": current_date,
             "products": [
                 {
