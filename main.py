@@ -53,7 +53,8 @@ class App(ctk.CTk):
             frame.update_data()
         elif (isinstance(frame, CreateOrder)):
             frame.update_search_results()
-
+        elif (isinstance(frame, ManagerProducts)):
+            frame.load_products()
 
 if __name__ == "__main__":
     app = App()

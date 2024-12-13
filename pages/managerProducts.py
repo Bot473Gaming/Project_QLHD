@@ -82,6 +82,9 @@ class ManagerProducts(ctk.CTkFrame):
         self.load_products()
 
     def load_products(self):
+        for product in self.product_list:
+            product["frame"].destroy()
+        self.product_list.clear()
         """Đọc sản phẩm từ tệp products.json và hiển thị chúng vào giao diện."""
         try:
             # Sử dụng đường dẫn đúng tới tệp sản phẩm
