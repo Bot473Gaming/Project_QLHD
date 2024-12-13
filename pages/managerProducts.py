@@ -121,7 +121,7 @@ class ManagerProducts(ctk.CTkFrame):
                 "price": int(product["price"]),
                 "img": product["image"]  # Đường dẫn ảnh mới sẽ là tên ảnh
             } for product in self.product_list]
-
+            print(products_to_save)
             with open("../Project_QLHD/assets/data/products.json", "w", encoding="utf-8") as file:
                 json.dump(products_to_save, file, ensure_ascii=False, indent=4)
         except Exception as e:
@@ -145,7 +145,7 @@ class ManagerProducts(ctk.CTkFrame):
         name_label.pack(anchor="w")
 
         # Hiển thị giá sản phẩm
-        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']:,} VND", anchor="w")
+        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']} VND", anchor="w")
         price_label.pack(anchor="w")
 
         # Tạo nút xóa cho sản phẩm
@@ -154,7 +154,7 @@ class ManagerProducts(ctk.CTkFrame):
 
         # Thêm sản phẩm vào danh sách
         self.product_list.append({
-            "id" : uuid.uuid4() ,
+            "id": product["id"],  # ID duy nhất cho sản phẩm
             "name": product["name"],
             "price": int(product["price"]),
             "image": product["img"],
@@ -222,7 +222,7 @@ class ManagerProducts(ctk.CTkFrame):
             self.product_list.append({
                 "id" : uuid.uuid4() ,
                 "name": product_name,
-                "price": int(product_price),
+                "price":int(product_price),
                 "image": new_image_path,  # Lưu đường dẫn ảnh mới
                 "frame": product_frame  # Lưu lại frame của sản phẩm
             })
