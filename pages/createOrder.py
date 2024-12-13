@@ -27,7 +27,7 @@ class CreateOrder(ctk.CTkFrame):
 
         # Dòng kẻ ngăn cách heading và nội dung
         separator_heading = ctk.CTkFrame(self, height=2, fg_color="gray")
-        separator_heading.pack(fill="x", pady=10)
+        separator_heading.pack(fill="x", pady=0)
 
         # Frame content chứa 2 phần
         content_frame = ctk.CTkFrame(self)
@@ -57,7 +57,7 @@ class CreateOrder(ctk.CTkFrame):
 
         # Phần bên phải - menu
         right_frame = ctk.CTkFrame(content_frame)
-        right_frame.grid(row=0, column=2, sticky="nsew")
+        right_frame.grid(row=0, column=2, padx=5, sticky="nsew")
 
         # Tạo thanh tìm kiếm
         search_label = ctk.CTkLabel(right_frame, text="Tìm kiếm sản phẩm", font=ctk.CTkFont(size=14))
@@ -291,6 +291,7 @@ class CreateOrder(ctk.CTkFrame):
         # Đọc và trả về dữ liệu từ file JSON
         with open(file_path, "r", encoding="utf-8") as file:
             return json.load(file)
+
 
     def payment(self):
         if not self.cart:

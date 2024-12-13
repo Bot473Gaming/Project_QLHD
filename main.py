@@ -11,11 +11,14 @@ class App(ctk.CTk):
         self.title("Quản lí đơn hàng")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
-
+            
         # Tạo menu bên trái
         self.menu_frame = ctk.CTkFrame(self, width=250, corner_radius=0)
         self.menu_frame.grid(row=0, column=0, sticky="ns")
-        self.menu_frame.grid_rowconfigure(4, weight=1)
+        self.menu_frame.grid_rowconfigure(5, weight=1)
+        
+        # separator = ctk.CTkFrame(self, width=2, fg_color="gray")  # Dòng kẻ mỏng với màu xám
+        # separator.grid(row=0, column=0)   
 
         menu_label = ctk.CTkLabel(self.menu_frame, text="Menu", font=ctk.CTkFont(size=20, weight="bold"))
         menu_label.grid(row=0, column=0, padx=20, pady=(20, 10))

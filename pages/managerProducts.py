@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 import json
 import shutil
@@ -13,14 +13,14 @@ class ManagerProducts(ctk.CTkFrame):
 
         label = ctk.CTkLabel(
             heading_frame, 
-            text="Tạo đơn hàng", 
+            text="Quản lý sản phẩm", 
             font=ctk.CTkFont(size=20, weight="bold")
         )
         label.pack(pady=10)
 
         # Dòng kẻ ngăn cách heading và nội dung
         separator_heading = ctk.CTkFrame(self, height=2, fg_color="gray")
-        separator_heading.pack(fill="x", pady=10)
+        separator_heading.pack(fill="x", pady=0)
 
         # Frame content chứa 2 phần
         content_frame = ctk.CTkFrame(self)
@@ -34,12 +34,13 @@ class ManagerProducts(ctk.CTkFrame):
 
         # Phần bên trái - danh sách sản phẩm
         self.scrollable_frame = ctk.CTkScrollableFrame(content_frame)
-        self.scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
 
         # Phần bên phải - menu
         right_frame = ctk.CTkFrame(content_frame)
-        right_frame.grid(row=0, column=2, sticky="nsew", padx=10, pady=10)
-
+        right_frame.grid(row=0, column=2, sticky="nsew", padx=0, pady=0)
+        separator = ctk.CTkFrame(content_frame, width=2, fg_color="gray")  # Dòng kẻ mỏng với màu xám
+        separator.grid(row=0, column=1, sticky="ns")   
         # Nút chọn ảnh
         self.selected_image = None
         self.preview_label = ctk.CTkLabel(right_frame, text="", width=150, height=150, fg_color="lightgray")
@@ -59,6 +60,10 @@ class ManagerProducts(ctk.CTkFrame):
         button1 = ctk.CTkButton(right_frame, text="Thêm sản phẩm", command=self.add_item)
         button1.pack(pady=10)
 
+        # Nút cập nhật
+        update_button = ctk.CTkButton(right_frame, text="Cập nhật", command=self.update_products, width=100)
+        update_button.pack(pady=10)
+
         # Footer
         footer_frame = ctk.CTkFrame(self)
         footer_frame.pack(fill="x")
@@ -72,9 +77,6 @@ class ManagerProducts(ctk.CTkFrame):
 
         self.footer_label = ctk.CTkLabel(footer_content_frame, text="Tổng số sản phẩm: 0", font=ctk.CTkFont(size=14))
         self.footer_label.pack(side="left", padx=10)
-
-        update_button = ctk.CTkButton(footer_content_frame, text="Cập nhật", command=self.save_products, width=100)
-        update_button.pack(side="right", padx=10)
 
         # Khởi tạo danh sách sản phẩm
         self.product_list = []
@@ -97,6 +99,11 @@ class ManagerProducts(ctk.CTkFrame):
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"Lỗi khi đọc file sản phẩm: {e}")
 
+    def update_products(self):
+        """Lưu danh sách sản phẩm vào tệp products.json và thông báo cập nhật thành công."""
+        self.save_products()
+        messagebox.showinfo("Cập nhật", "Cập nhật danh sách sản phẩm thành công!")
+
     def save_products(self):
         """Lưu danh sách sản phẩm vào tệp products.json."""
         try:
@@ -116,7 +123,6 @@ class ManagerProducts(ctk.CTkFrame):
 
             with open("../Project_QLHD/assets/data/products.json", "w", encoding="utf-8") as file:
                 json.dump(products_to_save, file, ensure_ascii=False, indent=4)
-            print("Dữ liệu đã được lưu thành công.")
         except Exception as e:
             print(f"Lỗi khi lưu sản phẩm vào tệp: {e}")
 
@@ -147,7 +153,7 @@ class ManagerProducts(ctk.CTkFrame):
 
         # Thêm sản phẩm vào danh sách
         self.product_list.append({
-            "id" : len(self.product_list) + 1,
+            "id" : len(self.product_list) + 1 ,
             "name": product["name"],
             "price": product["price"],
             "image": product["img"],
@@ -204,7 +210,7 @@ class ManagerProducts(ctk.CTkFrame):
             name_label.pack(anchor="w")
 
             # Hiển thị giá sản phẩm
-            price_label = ctk.CTkLabel(product_frame, text=f"{product_price} VND", anchor="w")
+            price_label = ctk.CTkLabel(product_frame, text=f"{product_price:,} VND", anchor="w")
             price_label.pack(anchor="w")
 
             # Tạo nút xóa cho sản phẩm
@@ -213,6 +219,7 @@ class ManagerProducts(ctk.CTkFrame):
 
             # Thêm sản phẩm vào danh sách
             self.product_list.append({
+                "id" : len(self.product_list) + 1 ,
                 "name": product_name,
                 "price": product_price,
                 "image": new_image_path,  # Lưu đường dẫn ảnh mới
@@ -235,18 +242,20 @@ class ManagerProducts(ctk.CTkFrame):
 
     def remove_specific_item(self, product_frame):
         """Xóa sản phẩm khỏi danh sách."""
-        for product in self.product_list:
-            if product["frame"] == product_frame:
-                self.product_list.remove(product)
-                break
+        confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc chắn muốn xóa sản phẩm này?")
+        if confirm:
+            for product in self.product_list:
+                if product["frame"] == product_frame:
+                    self.product_list.remove(product)
+                    break
 
-        # Xóa frame của sản phẩm từ giao diện
-        product_frame.destroy()
+            # Xóa frame của sản phẩm từ giao diện
+            product_frame.destroy()
 
-        # Cập nhật footer
-        self.update_footer()
+            # Cập nhật footer
+            self.update_footer()
 
     def update_footer(self):
-        """Cập nhật tổng số sản phẩm trong footer."""
+        """Cập nhật tổng số sản phẩm và lưu vào file."""
         total_items = len(self.product_list)
         self.footer_label.configure(text=f"Tổng số sản phẩm: {total_items}")
