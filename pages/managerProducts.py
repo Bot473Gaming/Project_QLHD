@@ -94,7 +94,7 @@ class ManagerProducts(ctk.CTkFrame):
 
             # Hiển thị ảnh sản phẩm
             image = Image.open(self.selected_image)
-            image = image.resize((50, 50))  # Resize ảnh cho vừa
+            image = image.resize((100, 100))  # Resize ảnh cho vừa
             photo = ImageTk.PhotoImage(image)
             image_label = ctk.CTkLabel(product_frame, image=photo)
             image_label.image = photo  # Giữ tham chiếu ảnh
