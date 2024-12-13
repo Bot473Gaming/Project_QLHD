@@ -4,6 +4,6 @@ class ReportDT(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent)
         self.controller = controller
 
-        label = ctk.CTkLabel(self, text="Đây là Trang Bao cao doanh thu", font=ctk.CTkFont(size=20, weight="bold"))
+        label = ctk.CTkLabel(self, text="Đây là Trang Bao cao doanh thu s1213", font=ctk.CTkFont(size=20, weight="bold"))
         label.pack(pady=20)
 
