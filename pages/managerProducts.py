@@ -220,7 +220,7 @@ class ManagerProducts(ctk.CTkFrame):
 
             # Thêm sản phẩm vào danh sách
             self.product_list.append({
-                "id" : uuid.uuid4() ,
+                "id" : str(uuid.uuid4()) ,
                 "name": product_name,
                 "price":int(product_price),
                 "image": new_image_path,  # Lưu đường dẫn ảnh mới
