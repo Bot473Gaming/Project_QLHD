@@ -30,10 +30,11 @@ class App(ctk.CTk):
         customers_button = ctk.CTkButton(self.menu_frame, text="Khách Hàng", command=lambda: self.show_frame(ReportDT))
         customers_button.grid(row=3, column=0, padx=20, pady=10)
 
-
         # Tạo frame chứa nội dung
         self.content_frame = ctk.CTkFrame(self)
         self.content_frame.grid(row=0, column=1, sticky="nsew")
+        self.content_frame.grid_rowconfigure(0, weight=1)  # Chiều cao linh hoạt
+        self.content_frame.grid_columnconfigure(0, weight=1)  # Chiều rộng linh hoạt
 
         # Khởi tạo các trang
         self.frames = {}
@@ -42,12 +43,12 @@ class App(ctk.CTk):
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(CreateOrder) # Hiển thị trang đầu tiên
-
+        self.show_frame(CreateOrder)  # Hiển thị trang đầu tiên
 
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+
 
 
 if __name__ == "__main__":
