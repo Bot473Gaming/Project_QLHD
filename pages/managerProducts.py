@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import filedialog
-from PIL import Image, ImageTk
+from PIL import Image
 
 class ManagerProducts(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -32,8 +32,8 @@ class ManagerProducts(ctk.CTkFrame):
         content_frame.columnconfigure(2, weight=1)  # Phần menu bên phải chiếm ít không gian
         content_frame.rowconfigure(0, weight=1)     # Đảm bảo chiếm hết chiều cao
 
-        # Phần bên trái - danh sách sản phẩm
-        self.product_frame = ctk.CTkFrame(content_frame)
+        # Phần bên trái - danh sách sản phẩm (sử dụng CTkScrollableFrame)
+        self.product_frame = ctk.CTkScrollableFrame(content_frame)
         self.product_frame.grid(row=0, column=0, sticky="nsew")
 
         # Phần bên phải - menu
@@ -83,7 +83,7 @@ class ManagerProducts(ctk.CTkFrame):
             self.selected_image = file_path
 
     def add_item(self):
-        # Lấy tên sản phẩm và giá từ entry
+    # Lấy tên sản phẩm và giá từ entry
         product_name = self.product_name_entry.get()
         product_price = self.product_price_entry.get()
 
@@ -99,13 +99,17 @@ class ManagerProducts(ctk.CTkFrame):
             img_label.image = photo  # Giữ tham chiếu ảnh để không bị xóa
             img_label.pack(side="left", padx=10)
 
-            # Hiển thị tên sản phẩm
-            name_label = ctk.CTkLabel(product_frame, text=product_name)
-            name_label.pack(side="left", padx=10)
+            # Tạo một khung con cho thông tin sản phẩm (tên và giá)
+            info_frame = ctk.CTkFrame(product_frame, fg_color="transparent")
+            info_frame.pack(side="left", padx=10, pady=5)
 
-            # Hiển thị giá sản phẩm
-            price_label = ctk.CTkLabel(product_frame, text=f"{product_price} VND")
-            price_label.pack(side="left", padx=10)
+            # Hiển thị tên sản phẩm (ở trên)
+            name_label = ctk.CTkLabel(info_frame, text=product_name, font=ctk.CTkFont(size=18, weight="bold"))
+            name_label.pack(side="top", anchor="w")
+
+            # Hiển thị giá sản phẩm (ở dưới tên)
+            price_label = ctk.CTkLabel(info_frame, text=f"{product_price} VND", font=ctk.CTkFont(size=14))
+            price_label.pack(side="top", anchor="w")
 
             # Tạo nút xóa cho sản phẩm
             delete_button = ctk.CTkButton(product_frame, text="Xóa", command=lambda: self.remove_specific_item(product_frame))
@@ -128,6 +132,7 @@ class ManagerProducts(ctk.CTkFrame):
             self.selected_image = None
         else:
             print("Vui lòng nhập đầy đủ thông tin sản phẩm và chọn ảnh.")
+
 
     def remove_specific_item(self, product_frame):
         # Xóa sản phẩm khỏi danh sách
