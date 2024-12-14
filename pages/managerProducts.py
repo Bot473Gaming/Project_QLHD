@@ -233,11 +233,11 @@ class ManagerProducts(ctk.CTkFrame):
             # Reset các trường nhập
             self.product_name_entry.delete(0, "end")
             self.product_price_entry.delete(0, "end")
-            self.selected_image = None
+            self.selected_image = ""
 
             # Xóa ảnh preview
-            self.preview_label.configure(image=None, text="", fg_color="lightgray")
-            self.preview_label.image = None
+            self.preview_label.configure(image="", text="", fg_color="lightgray")
+            self.preview_label.image = ""
         else:
             print("Vui lòng nhập đầy đủ thông tin sản phẩm và chọn ảnh.")
 
