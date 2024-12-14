@@ -630,5 +630,25 @@
         ],
         "total_quantity": 12,
         "total_cost": 460000
+    },
+    {
+        "id": "0cefd3d3-d021-4106-8667-3fc58ec7aaea",
+        "date": "14-12-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 3
+            },
+            {
+                "id": 2,
+                "quantity": 3
+            },
+            {
+                "id": 3,
+                "quantity": 1
+            }
+        ],
+        "total_quantity": 7,
+        "total_cost": 275000
     }
 ]
