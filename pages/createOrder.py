@@ -188,7 +188,7 @@ class CreateOrder(ctk.CTkFrame):
         img = Image.open(product["img"])  # Đọc ảnh từ đường dẫn (product["img"])
         img = img.resize((100, 100))  # Đảm bảo ảnh có kích thước 60x60
         img_tk = ImageTk.PhotoImage(img)
-        img_label = ctk.CTkLabel(row_frame, text="", image=img_tk, width=100, height=100, fg_color="gray")  # Chiều rộng bằng chiều cao và không có màu nền
+        img_label = ctk.CTkLabel(row_frame, text="", image=img_tk, width=100, height=100, fg_color="transparent")  # Chiều rộng bằng chiều cao và không có màu nền
         img_label.grid(row=0, column=0, padx=0, pady=0)
         # Để hiển thị ảnh thật, bạn có thể thay bằng hình ảnh thực tế, ví dụ dùng img_label.configure(image=product["img"])
 
