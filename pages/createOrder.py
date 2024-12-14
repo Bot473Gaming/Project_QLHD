@@ -4,6 +4,7 @@ from tkinter import messagebox
 import datetime
 import json
 import uuid
+import random
 
 
 class CreateOrder(ctk.CTkFrame):
@@ -116,6 +117,7 @@ class CreateOrder(ctk.CTkFrame):
 
     def update_search_results(self, event=None):
         # Xóa kết quả tìm kiếm cũ
+        
         for widget in self.suggestion_frame.winfo_children():
             widget.destroy()
         self.product_data = self.load_product_data("../Project_QLHD/assets/data/products.json")
@@ -139,12 +141,12 @@ class CreateOrder(ctk.CTkFrame):
             img = img.resize((100, 100))  # Đảm bảo ảnh có kích thước 60x60
             img_tk = ImageTk.PhotoImage(img)  # Chuyển ảnh thành đối tượng có thể hiển thị trên Tkinter
 
-            img_label = ctk.CTkLabel(suggestion_frame,text="", image=img_tk, width=60, height=60)
-            img_label.grid(row=0, column=0, padx=5, pady=5)
+            img_label = ctk.CTkLabel(suggestion_frame,text="", image=img_tk, width=100, height=100)
+            img_label.grid(row=0, column=0, padx=0, pady=0)
 
             # Cột 2: Tên sản phẩm, Giá sản phẩm, và Nút thêm
             detail_frame = ctk.CTkFrame(suggestion_frame, fg_color="transparent")
-            detail_frame.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+            detail_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
             # Dòng 1: Tên sản phẩm
             name_label = ctk.CTkLabel(detail_frame, text=product["name"], font=ctk.CTkFont(size=14))
@@ -156,7 +158,7 @@ class CreateOrder(ctk.CTkFrame):
 
             # Dòng 3: Nút thêm sản phẩm vào giỏ hàng
             add_button = ctk.CTkButton(detail_frame, text="Thêm vào giỏ", command=lambda p=product: self.add_item(p))
-            add_button.grid(row=2, column=0, pady=5)
+            add_button.grid(row=2, column=0,  pady=5, sticky="w")
 
             # Lưu lại đối tượng ảnh để tránh việc ảnh bị garbage collected
             img_label.image = img_tk
@@ -198,14 +200,16 @@ class CreateOrder(ctk.CTkFrame):
         product_name = ctk.CTkLabel(detail_frame, text=product["name"], font=ctk.CTkFont(size=15, weight="bold"))
         product_name.grid(row=0, column=0, sticky="w")
 
+        price_frame = ctk.CTkFrame(detail_frame, fg_color="transparent")
+        price_frame.grid(row=1, column=0, sticky="w")
         # Dòng hiển thị giá
-        price_label = ctk.CTkLabel(detail_frame, text=f"{product['price']:,} x", font=ctk.CTkFont(size=14))
-        price_label.grid(row=1, column=0, padx=(0, 5), sticky="w")
+        price_label = ctk.CTkLabel(price_frame, text=f"{product['price']:,} x", font=ctk.CTkFont(size=14))
+        price_label.grid(row=0, column=0, padx=(0, 5), sticky="w")
 
         # Số lượng trong giỏ hàng
         quantity = self.cart[product["id"]]["quantity"]  # Lấy số lượng từ giỏ hàng
-        quantity_label = ctk.CTkLabel(detail_frame, text=f"{quantity}", font=ctk.CTkFont(size=14), width=30)
-        quantity_label.grid(row=1, column=2, padx=10)
+        quantity_label = ctk.CTkLabel(price_frame, text=f"{quantity}", font=ctk.CTkFont(size=14), width=30)
+        quantity_label.grid(row=0, column=2, padx=10)
 
         def update_quantity(change):
             # Cập nhật số lượng và tổng tiền khi nhấn nút "+" hoặc "-"
@@ -222,14 +226,14 @@ class CreateOrder(ctk.CTkFrame):
             self.cart[product["id"]]["quantity"] = quantity
             self.update_footer()
 
-        minus_button = ctk.CTkButton(detail_frame, text="-", width=30, command=lambda: update_quantity(-1))
-        minus_button.grid(row=1, column=1)
+        minus_button = ctk.CTkButton(price_frame, text="-", width=30, command=lambda: update_quantity(-1))
+        minus_button.grid(row=0, column=1 , padx=(15, 0))
 
-        plus_button = ctk.CTkButton(detail_frame, text="+", width=30, command=lambda: update_quantity(1))
-        plus_button.grid(row=1, column=3)
+        plus_button = ctk.CTkButton(price_frame, text="+", width=30, command=lambda: update_quantity(1))
+        plus_button.grid(row=0, column=3)
 
-        total_label = ctk.CTkLabel(detail_frame, text=f" = {product['price']:,} VND", font=ctk.CTkFont(size=14), width=60)
-        total_label.grid(row=1, column=4, padx=10, sticky="w")
+        total_label = ctk.CTkLabel(price_frame, text=f" = {product['price']:,} VND", font=ctk.CTkFont(size=14), width=60)
+        total_label.grid(row=0, column=4, padx=10, sticky="w")
 
         # Cột 3: Nút xóa
         delete_button = ctk.CTkButton(row_frame, text="Xóa", width=34, command=lambda: self.remove_item(row_frame))
@@ -238,7 +242,7 @@ class CreateOrder(ctk.CTkFrame):
 
         # Điều chỉnh cột của grid cho các phần tử trong danh sách
         # row_frame.grid_columnconfigure(0, weight=1)  # Cột 1 chiếm không gian vừa phải
-        row_frame.grid_columnconfigure(1, weight=3)  # Cột 2 chiếm nhiều không gian
+        row_frame.grid_columnconfigure(1, weight=2)  # Cột 2 chiếm nhiều không gian
         row_frame.grid_columnconfigure(2, weight=0)  # Cột 3 chiếm ít không gian (nút xóa)
 
 
@@ -253,9 +257,9 @@ class CreateOrder(ctk.CTkFrame):
             row_frame = widget
             product_name_label = row_frame.winfo_children()[1].winfo_children()[0]  # Label tên sản phẩm
             if product_name_label.cget("text") == product["name"]:
-                quantity_label = row_frame.winfo_children()[1].winfo_children()[2]  # Label số lượng
+                quantity_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[1]
                 quantity_label.configure(text=f"{quantity}")
-                total_label = row_frame.winfo_children()[1].winfo_children()[5]  # Label tổng tiền
+                total_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[4]  # Label tổng tiền
                 total_label.configure(text=f" = {quantity * product['price']:,} VND")
                 break
 
@@ -311,7 +315,8 @@ class CreateOrder(ctk.CTkFrame):
 
         # Lấy ngày hiện tại với định dạng dd-mm-yyyy
         current_date = datetime.datetime.now().strftime("%d-%m-%Y")
-
+        a = current_date.split("-")
+        current_date = f'{random.randrange(1, 30)}-{random.randrange(1, 13)}-{a[2]}'
         # Tạo đơn hàng mới
         new_order = {
             "id": str(uuid.uuid4()),
@@ -351,5 +356,6 @@ class CreateOrder(ctk.CTkFrame):
         for id in self.cart.keys():
             if (id not in map(lambda x: x["id"],self.product_data)):
                 self.cart[id]["frame"].destroy()
+                del self.cart[id]
             
         

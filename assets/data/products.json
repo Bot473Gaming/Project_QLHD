@@ -3,19 +3,19 @@
         "id": 1,
         "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
         "name": "phở",
-        "price": 500000
+        "price": 50000
     },
     {
         "id": 2,
         "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
         "name": "Bún bò",
-        "price": 300000
+        "price": 30000
     },
     {
         "id": 3,
         "img": "../Project_QLHD/assets/imgs/bun_bo_hue_1.png",
         "name": "Bún chả",
-        "price": 350000
+        "price": 35000
     },
     {
         "id": 4,
