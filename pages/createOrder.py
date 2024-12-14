@@ -315,8 +315,8 @@ class CreateOrder(ctk.CTkFrame):
 
         # Lấy ngày hiện tại với định dạng dd-mm-yyyy
         current_date = datetime.datetime.now().strftime("%d-%m-%Y")
-        a = current_date.split("-")
-        current_date = f'{random.randrange(1, 30)}-{random.randrange(1, 13)}-{a[2]}'
+        # a = current_date.split("-")
+        # current_date = f'{random.randrange(1, 30)}-{random.randrange(1, 13)}-{a[2]}'
         # Tạo đơn hàng mới
         new_order = {
             "id": str(uuid.uuid4()),
@@ -350,12 +350,13 @@ class CreateOrder(ctk.CTkFrame):
 
         # Hiển thị thông báo thành công
         messagebox.showinfo("Thông báo", "Thanh toán thành công!")
-        print("Đơn hàng mới:", new_order)
+        # print("Đơn hàng mới:", new_order)
     def check_exits_products(self):
         # Kiểm tra tồn tại sản phẩm trong giỏ hàng
         for id in self.cart.keys():
             if (id not in map(lambda x: x["id"],self.product_data)):
                 self.cart[id]["frame"].destroy()
                 del self.cart[id]
+        self.update_footer()
             
         

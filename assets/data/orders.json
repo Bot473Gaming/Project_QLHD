@@ -590,5 +590,45 @@
         ],
         "total_quantity": 7,
         "total_cost": 3150000
+    },
+    {
+        "id": "1fd7c7ac-ba40-44a7-a77c-2c9f782521ad",
+        "date": "18-7-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 4
+            },
+            {
+                "id": 2,
+                "quantity": 5
+            },
+            {
+                "id": 3,
+                "quantity": 3
+            }
+        ],
+        "total_quantity": 12,
+        "total_cost": 455000
+    },
+    {
+        "id": "79a17c34-03d8-4eb9-aacb-aa6cef74f175",
+        "date": "5-9-2024",
+        "products": [
+            {
+                "id": 1,
+                "quantity": 4
+            },
+            {
+                "id": 2,
+                "quantity": 4
+            },
+            {
+                "id": 3,
+                "quantity": 4
+            }
+        ],
+        "total_quantity": 12,
+        "total_cost": 460000
     }
 ]
