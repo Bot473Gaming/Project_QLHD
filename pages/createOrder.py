@@ -266,6 +266,8 @@ class CreateOrder(ctk.CTkFrame):
         self.update_footer()
 
     def update_footer(self):
+        
+        print(self.cart)
         total_quantity = sum(item["quantity"] for item in self.cart.values())
         total_amount = sum(item["quantity"] * item["product"]["price"] for item in self.cart.values())
 
@@ -353,10 +355,11 @@ class CreateOrder(ctk.CTkFrame):
         # print("Đơn hàng mới:", new_order)
     def check_exits_products(self):
         # Kiểm tra tồn tại sản phẩm trong giỏ hàng
-        for id in self.cart.keys():
+        for id in self.cart.copy().keys():
             if (id not in map(lambda x: x["id"],self.product_data)):
                 self.cart[id]["frame"].destroy()
                 del self.cart[id]
+                
         self.update_footer()
             
         
