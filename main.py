@@ -2,6 +2,7 @@ import customtkinter as ctk
 from pages.createOrder import *
 from pages.managerProducts import *
 from pages.reportDT import *
+from pages.about import *
 
 class App(ctk.CTk):
     def __init__(self):
@@ -29,7 +30,9 @@ class App(ctk.CTk):
         customers_button = ctk.CTkButton(self.menu_frame, text="Báo cáo doanh thu", command=lambda: self.show_frame(ReportDT))
         customers_button.grid(row=3, column=0, padx=20, pady=10)
 
-
+        About_button = ctk.CTkButton(self.menu_frame, text="Giới thiệu", command=lambda: self.show_frame(About))
+        About_button.grid(row=4, column=0, padx=20, pady=10, sticky="n")
+        
         # Tạo frame chứa nội dung
         self.content_frame = ctk.CTkFrame(self)
         self.content_frame.grid(row=0, column=1, sticky="nsew")
@@ -41,7 +44,7 @@ class App(ctk.CTk):
         self.left_border.grid(row=0, column=1, sticky="nsw", padx=0, pady=0)  # Gắn viền vào lề trái của menu
         # Khởi tạo các trang
         self.frames = {}
-        for F in (CreateOrder, ManagerProducts, ReportDT):
+        for F in (CreateOrder, ManagerProducts, ReportDT, About):
             frame = F(self.content_frame, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
