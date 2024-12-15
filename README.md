@@ -1,4 +1,7 @@
-### Run app
+## Project Quản Hoá Đơn hàng
+
+
+## Run app
 
 Chạy file `RUN_APP.pyw`
 ## Lib PIP
