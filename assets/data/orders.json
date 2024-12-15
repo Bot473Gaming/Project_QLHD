@@ -650,5 +650,65 @@
         ],
         "total_quantity": 7,
         "total_cost": 275000
+    },
+    {
+        "id": "5b637ba5-dc00-4a95-9a11-cc48c0a2f841",
+        "date": "15-12-2024",
+        "products": [
+            {
+                "id": "ef341998-cb66-4d4a-bbc3-ddcac52e8f48",
+                "quantity": 5
+            },
+            {
+                "id": "25fb3deb-89f4-44fe-957e-1f973f99c998",
+                "quantity": 4
+            },
+            {
+                "id": "8ecd1740-7a5e-4d9d-a046-1423f4a03a5d",
+                "quantity": 4
+            },
+            {
+                "id": "f0119833-7437-496d-b024-0bd6a7134c6c",
+                "quantity": 1
+            },
+            {
+                "id": "45e84266-f59b-48c8-a4fc-2507def10545",
+                "quantity": 3
+            },
+            {
+                "id": "fe3e3d25-08aa-4687-8245-05ba08c7af74",
+                "quantity": 3
+            }
+        ],
+        "total_quantity": 20,
+        "total_cost": 910000
+    },
+    {
+        "id": "8fa3c35b-a68e-415d-8686-8f7d60f0fd98",
+        "date": "15-12-2024",
+        "products": [
+            {
+                "id": "bb3b927b-a914-4e25-ab54-2297772e6689",
+                "quantity": 1
+            },
+            {
+                "id": "3909c022-99a8-49f7-8ff6-9168b69d49cd",
+                "quantity": 1
+            },
+            {
+                "id": "8fb3f7cc-6be0-4f4d-8572-b67f94c72e7b",
+                "quantity": 6
+            },
+            {
+                "id": "dbe8eed4-bb75-4d7e-85e1-5f913ddfaae9",
+                "quantity": 2
+            },
+            {
+                "id": "551b50da-7cee-4681-b192-ae9e96499557",
+                "quantity": 1
+            }
+        ],
+        "total_quantity": 11,
+        "total_cost": 369000
     }
 ]
