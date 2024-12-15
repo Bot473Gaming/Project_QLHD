@@ -4,17 +4,18 @@ from tkinter import messagebox
 import datetime
 import json
 import uuid
-import random
+import os
 
 
 class CreateOrder(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-
+        
+        self.BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         # Dữ liệu sản phẩm JSON
-        self.orders_file = "../Project_QLHD/assets/data/orders.json"
-        self.product_data = self.load_product_data("../Project_QLHD/assets/data/products.json")
+        self.orders_file = self.get_path("assets", "data", "orders.json")
+        self.product_data = self.load_product_data(self.get_path("assets", "data", "products.json"))
 
         # Phần heading
         heading_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -66,7 +67,7 @@ class CreateOrder(ctk.CTkFrame):
         search_label = ctk.CTkLabel(right_frame, text="Tìm kiếm sản phẩm", font=ctk.CTkFont(size=14))
         search_label.pack(pady=10)
 
-        self.search_entry = ctk.CTkEntry(right_frame, placeholder_text="Nhập tên sản phẩm...")
+        self.search_entry = ctk.CTkEntry(right_frame, placeholder_text="Nhập tên sản phẩm...", width=200)
         self.search_entry.pack(pady=5, padx=10)
         self.search_entry.bind("<KeyRelease>", self.update_search_results)
 
@@ -120,7 +121,7 @@ class CreateOrder(ctk.CTkFrame):
         
         for widget in self.suggestion_frame.winfo_children():
             widget.destroy()
-        self.product_data = self.load_product_data("../Project_QLHD/assets/data/products.json")
+        self.product_data = self.load_product_data(self.get_path("assets", "data", "products.json"))
         search_query = self.search_entry.get().lower()
 
         # Tìm kiếm các sản phẩm phù hợp
@@ -137,7 +138,7 @@ class CreateOrder(ctk.CTkFrame):
             suggestion_frame.pack(fill="x", pady=5)
 
             # Ảnh sản phẩm (Fixed kích thước hình vuông)
-            img = Image.open(product["img"])  # Đọc ảnh từ đường dẫn (product["img"])
+            img = Image.open(self.get_path("assets", "imgs" ,product["img"]))  # Đọc ảnh từ đường dẫn (product["img"])
             img = img.resize((100, 100))  # Đảm bảo ảnh có kích thước 60x60
             img_tk = ImageTk.PhotoImage(img)  # Chuyển ảnh thành đối tượng có thể hiển thị trên Tkinter
 
@@ -185,7 +186,7 @@ class CreateOrder(ctk.CTkFrame):
         row_frame.pack(fill="x", pady=5)
         self.cart[product["id"]]["frame"] = row_frame
         # Cột 1: Ảnh sản phẩm
-        img = Image.open(product["img"])  # Đọc ảnh từ đường dẫn (product["img"])
+        img = Image.open(self.get_path("assets", "imgs" ,product["img"]))  # Đọc ảnh từ đường dẫn (product["img"])
         img = img.resize((100, 100))  # Đảm bảo ảnh có kích thước 60x60
         img_tk = ImageTk.PhotoImage(img)
         img_label = ctk.CTkLabel(row_frame, text="", image=img_tk, width=100, height=100, fg_color="transparent")  # Chiều rộng bằng chiều cao và không có màu nền
@@ -267,7 +268,7 @@ class CreateOrder(ctk.CTkFrame):
 
     def update_footer(self):
         
-        print(self.cart)
+        # print(self.cart)
         total_quantity = sum(item["quantity"] for item in self.cart.values())
         total_amount = sum(item["quantity"] * item["product"]["price"] for item in self.cart.values())
 
@@ -361,5 +362,5 @@ class CreateOrder(ctk.CTkFrame):
                 del self.cart[id]
                 
         self.update_footer()
-            
-        
+    def get_path(self, *path_parts):
+        return os.path.join(self.BASE_DIR, *path_parts)

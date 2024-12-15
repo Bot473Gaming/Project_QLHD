@@ -1,13 +1,14 @@
 import customtkinter as ctk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import json
+import json, os
 from datetime import datetime
 
 class ReportDT(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent)
-        self.orders_file = "../Project_QLHD/assets/data/orders.json"
+        self.BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        self.orders_file = self.get_path("assets", "data", "orders.json")
         
         self.data = self.load_data()
         self.current_month = datetime.now().month
@@ -142,3 +143,5 @@ class ReportDT(ctk.CTkFrame):
             for order in self.data
             if datetime.strptime(order["date"], "%d-%m-%Y").month == month
         )
+    def get_path(self, *path_parts):
+        return os.path.join(self.BASE_DIR, *path_parts)

@@ -9,6 +9,10 @@ import os
 class ManagerProducts(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
+        
+        self.BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        self.products_file = self.get_path("assets", "data", "products.json")
+        # print(self.BASE_DIR,"BASE_DIR")
         heading_frame = ctk.CTkFrame(self, fg_color="transparent")
         heading_frame.pack(fill="x", pady=10)
 
@@ -92,12 +96,13 @@ class ManagerProducts(ctk.CTkFrame):
         self.product_list.clear()
 
         try:
-            with open("../Project_QLHD/assets/data/products.json", "r", encoding="utf-8") as file:
+            with open(self.products_file, "r", encoding="utf-8") as file:
                 products = json.load(file)
 
             for product in products:
                 self.display_product(product)
         except (FileNotFoundError, json.JSONDecodeError) as e:
+            messagebox.showinfo("Lỗi khi đọc file sản phẩm", e)
             print(f"Lỗi khi đọc file sản phẩm: {e}")
 
     def update_products(self):
@@ -109,10 +114,10 @@ class ManagerProducts(ctk.CTkFrame):
         """Lưu danh sách sản phẩm vào tệp products.json."""
         try:
             # Đảm bảo thư mục chứa tệp đã tồn tại
-            if not os.path.exists("../Project_QLHD/assets/data"):
-                os.makedirs("../Project_QLHD/assets/data")
-            if not os.path.exists("../Project_QLHD/assets/imgs"):
-                os.makedirs("../Project_QLHD/assets/imgs")
+            # if not os.path.exists("../Project_QLHD/assets/data"):
+            #     os.makedirs("../Project_QLHD/assets/data")
+            # if not os.path.exists("../Project_QLHD/assets/imgs"):
+            #     os.makedirs("../Project_QLHD/assets/imgs")
 
             # Chuyển đổi danh sách sản phẩm thành định dạng phù hợp với JSON
             products_to_save = [{
@@ -121,10 +126,11 @@ class ManagerProducts(ctk.CTkFrame):
                 "price": int(product["price"]),
                 "img": product["image"]  # Đường dẫn ảnh mới sẽ là tên ảnh
             } for product in self.product_list]
-            print(products_to_save)
-            with open("../Project_QLHD/assets/data/products.json", "w", encoding="utf-8") as file:
+            # print(products_to_save)
+            with open(self.products_file, "w", encoding="utf-8") as file:
                 json.dump(products_to_save, file, ensure_ascii=False, indent=4)
         except Exception as e:
+            messagebox.showinfo("Lỗi khi lưu sản phẩm vào tệp", e)
             print(f"Lỗi khi lưu sản phẩm vào tệp: {e}")
 
     def display_product(self, product):
@@ -133,7 +139,7 @@ class ManagerProducts(ctk.CTkFrame):
         product_frame.pack(fill="x", pady=5)
 
         # Hiển thị ảnh sản phẩm
-        image = Image.open(product["img"])
+        image = Image.open(self.get_path("assets", "imgs" ,product["img"]))
         image = image.resize((100, 100))  # Resize ảnh cho vừa
         photo = ImageTk.PhotoImage(image)
         img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
@@ -145,7 +151,7 @@ class ManagerProducts(ctk.CTkFrame):
         name_label.pack(anchor="w")
 
         # Hiển thị giá sản phẩm
-        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']} VND", anchor="w")
+        price_label = ctk.CTkLabel(product_frame, text=f"{product['price']:,} VND", font=ctk.CTkFont(size=16), anchor="w")
         price_label.pack(anchor="w")
 
         # Tạo nút xóa cho sản phẩm
@@ -183,14 +189,15 @@ class ManagerProducts(ctk.CTkFrame):
 
         if product_name and product_price and self.selected_image:
             # Tạo ID duy nhất cho ảnh
-            image_id = str(len(self.product_list))  # Tạo ID duy nhất cho ảnh
-            image_extension = self.selected_image.split('.')[-1]  # Lấy phần mở rộng của ảnh
-            new_image_path = f"../Project_QLHD/assets/imgs/{image_id}.png"  # Đặt tên mới cho ảnh
+            image_id = str(uuid.uuid4())  # Tạo ID duy nhất cho ảnh
+            image_extension = self.selected_image.split('.')[-1]  # Lấy phần mở rộng của ảnh# Đặt tên mới cho ảnh
+            new_image_path = self.get_path("assets", "imgs", f"{image_id}.png") # Đặt tên mới cho ảnh
 
             # Sao chép ảnh vào thư mục imgs
             try:
                 shutil.copy(self.selected_image, new_image_path)
             except Exception as e:
+                messagebox.showinfo("Lỗi khi sao chép ảnh:", e)
                 print(f"Lỗi khi sao chép ảnh: {e}")
                 return
 
@@ -211,7 +218,7 @@ class ManagerProducts(ctk.CTkFrame):
             name_label.pack(anchor="w")
 
             # Hiển thị giá sản phẩm
-            price_label = ctk.CTkLabel(product_frame, text=f"{product_price:,} VND", anchor="w")
+            price_label = ctk.CTkLabel(product_frame, text=f"{product_price:,} VND", font=ctk.CTkFont(size=16), anchor="w")
             price_label.pack(anchor="w")
 
             # Tạo nút xóa cho sản phẩm
@@ -223,7 +230,7 @@ class ManagerProducts(ctk.CTkFrame):
                 "id" : str(uuid.uuid4()) ,
                 "name": product_name,
                 "price":int(product_price),
-                "image": new_image_path,  # Lưu đường dẫn ảnh mới
+                "image": f"{image_id}.png",  # Lưu đường dẫn ảnh mới
                 "frame": product_frame  # Lưu lại frame của sản phẩm
             })
 
@@ -239,6 +246,7 @@ class ManagerProducts(ctk.CTkFrame):
             self.preview_label.configure(image="", text="", fg_color="lightgray")
             self.preview_label.image = ""
         else:
+            messagebox.showinfo("Lỗi", "Vui lòng nhập đầy đủ thông tin sản phẩm và chọn ảnh.")
             print("Vui lòng nhập đầy đủ thông tin sản phẩm và chọn ảnh.")
 
     def remove_specific_item(self, product_frame):
@@ -260,3 +268,5 @@ class ManagerProducts(ctk.CTkFrame):
         """Cập nhật tổng số sản phẩm và lưu vào file."""
         total_items = len(self.product_list)
         self.footer_label.configure(text=f"Tổng số sản phẩm: {total_items}")
+    def get_path(self, *path_parts):
+        return os.path.join(self.BASE_DIR, *path_parts)
