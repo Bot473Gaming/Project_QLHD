@@ -252,12 +252,11 @@ class CreateOrder(ctk.CTkFrame):
         # Cập nhật số lượng của sản phẩm trong giỏ hàng
         product = self.cart[product_id]["product"]
         quantity = self.cart[product_id]["quantity"]
-        
+        pos =list(self.cart.keys()).index(product_id)
         # Cập nhật lại số lượng trong giỏ hàng
-        for widget in self.items_frame.winfo_children():
+        for index, widget in enumerate(self.items_frame.winfo_children()):
             row_frame = widget
-            product_name_label = row_frame.winfo_children()[1].winfo_children()[0]  # Label tên sản phẩm
-            if product_name_label.cget("text") == product["name"]:
+            if pos == index:
                 quantity_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[1]
                 quantity_label.configure(text=f"{quantity}")
                 total_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[4]  # Label tổng tiền
@@ -267,8 +266,9 @@ class CreateOrder(ctk.CTkFrame):
         self.update_footer()
 
     def update_footer(self):
-        
+        # print("================================")
         # print(self.cart)
+        # print("================================")
         total_quantity = sum(item["quantity"] for item in self.cart.values())
         total_amount = sum(item["quantity"] * item["product"]["price"] for item in self.cart.values())
 
@@ -354,6 +354,18 @@ class CreateOrder(ctk.CTkFrame):
         # Hiển thị thông báo thành công
         messagebox.showinfo("Thông báo", "Thanh toán thành công!")
         # print("Đơn hàng mới:", new_order)
+    
+    def update_cart(self):
+        # print(self.product_data)
+        for product in self.product_data:
+            id = product["id"]
+            if id in self.cart:
+                self.cart[id]["product"]["name"] = product["name"]
+                self.cart[id]["product"]["price"] = product["price"]
+                self.cart[id]["product"]["img"] = product["img"]
+
+                self.update_item_in_cart(id)
+
     def check_exits_products(self):
         # Kiểm tra tồn tại sản phẩm trong giỏ hàng
         for id in self.cart.copy().keys():

@@ -61,6 +61,7 @@ class App(ctk.CTk):
         elif isinstance(frame, CreateOrder):
             frame.update_search_results()
             frame.check_exits_products()
+            frame.update_cart()
         elif isinstance(frame, ManagerProducts):
             frame.load_products()
 
