@@ -51,29 +51,29 @@ class ManagerProducts(ctk.CTkFrame):
         self.preview_label = ctk.CTkLabel(right_frame, text="", width=200, height=200, fg_color="lightgray")
         self.preview_label.pack(pady=10)
 
-        self.select_image_button = ctk.CTkButton(right_frame, text="Chọn ảnh", command=self.select_image)
+        self.select_image_button = ctk.CTkButton(right_frame, text="Chọn ảnh", width=200, command=self.select_image)
         self.select_image_button.pack(pady=10)
 
         # Entry cho tên sản phẩm và giá
-        self.product_name_entry = ctk.CTkEntry(right_frame, placeholder_text="Tên sản phẩm")
+        self.product_name_entry = ctk.CTkEntry(right_frame, placeholder_text="Tên sản phẩm", width=200, font=ctk.CTkFont(size=18))
         self.product_name_entry.pack(pady=5)
 
-        self.product_price_entry = ctk.CTkEntry(right_frame, placeholder_text="Giá sản phẩm")
+        self.product_price_entry = ctk.CTkEntry(right_frame, placeholder_text="Giá sản phẩm", width=200, font=ctk.CTkFont(size=18))
         self.product_price_entry.pack(pady=5)
     
         # Menu bên phải
         self.editing_product = None  # Lưu ID sản phẩm đang sửa
         # Nút sửa và hủy sẽ xuất hiện trong chế độ chỉnh sửa
-        self.save_button = ctk.CTkButton(right_frame, text="Lưu", command=self.save_edited_item, state="disabled")
-        self.cancel_button = ctk.CTkButton(right_frame, text="Hủy", command=self.cancel_edit, state="disabled")
+        self.save_button = ctk.CTkButton(right_frame, text="Lưu", width=200, command=self.save_edited_item, state="disabled")
+        self.cancel_button = ctk.CTkButton(right_frame, text="Hủy", width=200, command=self.cancel_edit, state="disabled")
         self.save_button.pack_forget()
         self.cancel_button.pack_forget()
         # Nút Thêm 
-        self.add_new_button = ctk.CTkButton(right_frame, text="Thêm sản phẩm", command=self.add_item)
+        self.add_new_button = ctk.CTkButton(right_frame, text="Thêm sản phẩm", width=200, command=self.add_item)
         self.add_new_button.pack(pady=10)
 
         # Nút cập nhật
-        update_button = ctk.CTkButton(right_frame, text="Cập nhật", command=self.update_products, width=100)
+        update_button = ctk.CTkButton(right_frame, text="Cập nhật", width=200, command=self.update_products)
         update_button.pack(pady=50, side="bottom")
 
         # Footer
@@ -133,7 +133,9 @@ class ManagerProducts(ctk.CTkFrame):
                 "price": int(product["price"]),
                 "img": product["img"]  # Đường dẫn ảnh mới sẽ là tên ảnh
             } for product in self.product_list]
-            # print(products_to_save)
+            print("================================")
+            print(products_to_save)
+            print("================================")
             with open(self.products_file, "w", encoding="utf-8") as file:
                 json.dump(products_to_save, file, ensure_ascii=False, indent=4)
         except Exception as e:
@@ -166,8 +168,13 @@ class ManagerProducts(ctk.CTkFrame):
         price_label.grid(row=1, column=0, sticky="w", padx=0)
 
         # Frame chứa các nút "Sửa" và "Xóa"
+        
         button_frame = ctk.CTkFrame(product_frame, fg_color="transparent")
-        button_frame.grid(row=0, column=3, padx=5, pady=5, sticky="ew")  # Đặt ở góc phải của sản phẩm
+        button_frame.grid(row=0, column=2, padx=15, pady=0, sticky="e")  # Đặt ở góc phải của sản phẩm
+        
+        # product_frame.columnconfigure(0, weight=1)  # Phần danh sách bên trái chiếm nhiều không gian
+        product_frame.columnconfigure(1, weight=2)  # Dòng kẻ phân cách (không chiếm thêm không gian)
+        product_frame.columnconfigure(2, weight=1)
 
         # Nút "Sửa"
         edit_button = ctk.CTkButton(
@@ -236,39 +243,14 @@ class ManagerProducts(ctk.CTkFrame):
                 print(f"Lỗi khi sao chép ảnh: {e}")
                 return
 
-            # Tạo khung cho sản phẩm
-            product_frame = ctk.CTkFrame(self.scrollable_frame)
-            product_frame.pack(fill="x", pady=5)
-
-            # Hiển thị ảnh sản phẩm
-            image = Image.open(new_image_path)
-            image = image.resize((100, 100))  # Resize ảnh cho vừa
-            photo = ImageTk.PhotoImage(image)
-            img_label = ctk.CTkLabel(product_frame, text="", image=photo, width=100, height=100, fg_color="transparent")
-            img_label.image = photo  # Giữ tham chiếu ảnh
-            img_label.pack(side="left", padx=10)
-
-            # Hiển thị tên sản phẩm
-            name_label = ctk.CTkLabel(product_frame, text=product_name, font=ctk.CTkFont(size=18), anchor="w")
-            name_label.pack(anchor="w")
-
-            # Hiển thị giá sản phẩm
-            price_label = ctk.CTkLabel(product_frame, text=f"{product_price:,} VND", font=ctk.CTkFont(size=16), anchor="w")
-            price_label.pack(anchor="w")
-
-            # Tạo nút xóa cho sản phẩm
-            delete_button = ctk.CTkButton(product_frame, text="Xóa", command=lambda: self.remove_specific_item(product_frame))
-            delete_button.pack(side="right", padx=10)
-
             # Thêm sản phẩm vào danh sách
-            self.product_list.append({
+            new_product = {
                 "id" : str(uuid.uuid4()) ,
                 "name": product_name,
                 "price":int(product_price),
                 "img": f"{image_id}.png",  # Lưu đường dẫn ảnh mới
-                "frame": product_frame  # Lưu lại frame của sản phẩm
-            })
-
+            }
+            self.display_product(new_product)
             # Cập nhật footer
             self.update_footer()
 
@@ -370,11 +352,23 @@ class ManagerProducts(ctk.CTkFrame):
                     self.selected_image = None
 
                 # Cập nhật giao diện hiển thị
-                product["frame"].destroy()
-                self.display_product(product)
+                self.update_frame_item(product)
                 self.cancel_edit()
                 break
         
+    def update_frame_item(self, product):
+        img_label = product["frame"].winfo_children()[0]
+        detail_product = product["frame"].winfo_children()[1]
+        name_label = detail_product.winfo_children()[0]
+        price_label = detail_product.winfo_children()[1]
+        image_path = self.get_path("assets", "imgs", product["img"])
+        image = Image.open(image_path)
+        image = image.resize((100, 100))
+        photo = ImageTk.PhotoImage(image)
+        img_label.configure(image=photo)
+        
+        name_label.configure(text=product["name"])
+        price_label.configure(text=f"{product['price']:,} VND")
         
         
     def update_footer(self):
