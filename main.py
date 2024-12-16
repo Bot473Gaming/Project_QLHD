@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from pages.createOrder import *
-from pages.managerProducts import *
-from pages.reportDT import *
+from pages.productManagement  import *
+from pages.report import *
 from pages.about import *
 
 class App(ctk.CTk):
@@ -24,10 +24,10 @@ class App(ctk.CTk):
         home_button = ctk.CTkButton(self.menu_frame, text="Tạo hoá đơn", command=lambda: self.show_frame(CreateOrder))
         home_button.grid(row=1, column=0, padx=20, pady=10)
 
-        products_button = ctk.CTkButton(self.menu_frame, text="Sản Phẩm", command=lambda: self.show_frame(ManagerProducts))
+        products_button = ctk.CTkButton(self.menu_frame, text="Sản Phẩm", command=lambda: self.show_frame(ProductManagement))
         products_button.grid(row=2, column=0, padx=20, pady=10)
 
-        customers_button = ctk.CTkButton(self.menu_frame, text="Báo cáo doanh thu", command=lambda: self.show_frame(ReportDT))
+        customers_button = ctk.CTkButton(self.menu_frame, text="Báo cáo doanh thu", command=lambda: self.show_frame(Report))
         customers_button.grid(row=3, column=0, padx=20, pady=10)
 
         About_button = ctk.CTkButton(self.menu_frame, text="Giới thiệu", command=lambda: self.show_frame(About))
@@ -44,7 +44,7 @@ class App(ctk.CTk):
         self.left_border.grid(row=0, column=1, sticky="nsw", padx=0, pady=0)  # Gắn viền vào lề trái của menu
         # Khởi tạo các trang
         self.frames = {}
-        for F in (CreateOrder, ManagerProducts, ReportDT, About):
+        for F in (CreateOrder, ProductManagement , Report, About):
             frame = F(self.content_frame, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -56,13 +56,13 @@ class App(ctk.CTk):
         frame.tkraise()
 
         # Auto-update when switching to ReportDT page
-        if isinstance(frame, ReportDT):
+        if isinstance(frame, Report):
             frame.update_data()
         elif isinstance(frame, CreateOrder):
             frame.update_search_results()
             frame.check_exits_products()
             frame.update_cart()
-        elif isinstance(frame, ManagerProducts):
+        elif isinstance(frame, ProductManagement):
             frame.load_products()
 
 if __name__ == "__main__":

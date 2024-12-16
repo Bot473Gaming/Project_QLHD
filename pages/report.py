@@ -4,7 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import json, os
 from datetime import datetime
 
-class ReportDT(ctk.CTkFrame):
+class Report(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent)
         self.BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

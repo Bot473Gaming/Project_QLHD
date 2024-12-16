@@ -6,7 +6,7 @@ import shutil
 import uuid
 import os
 
-class ManagerProducts(ctk.CTkFrame):
+class ProductManagement(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         
