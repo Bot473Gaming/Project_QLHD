@@ -7,12 +7,12 @@ Chạy file `RUN_APP.pyw`
 ## Lib PIP
 ```
 customtkinter
-pilow
+pillow
 matplotlib
 ```
 *Install*
 ```
 pip install customtkinter
-pip install pilow
+pip install pillow
 pip install matplotlib
 ```
