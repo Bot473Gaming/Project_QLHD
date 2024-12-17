@@ -122,6 +122,7 @@ class CreateOrder(ctk.CTkFrame):
         for widget in self.suggestion_frame.winfo_children():
             widget.destroy()
         self.product_data = self.load_product_data(self.get_path("assets", "data", "products.json"))
+        
         search_query = self.search_entry.get().lower()
 
         # Tìm kiếm các sản phẩm phù hợp
@@ -257,6 +258,8 @@ class CreateOrder(ctk.CTkFrame):
         for index, widget in enumerate(self.items_frame.winfo_children()):
             row_frame = widget
             if pos == index:
+                price_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[0]
+                price_label.configure(text=f"{product['price']:,} x")
                 quantity_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[1]
                 quantity_label.configure(text=f"{quantity}")
                 total_label = row_frame.winfo_children()[1].winfo_children()[1].winfo_children()[4]  # Label tổng tiền
